@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D myRigidbody;
     Animator myAnimator;
 
+    public Transform groundCheck;
+    public LayerMask groundLayer;
+    bool isGrounded;
+
     void Start()
     {
         GameObject.FindWithTag("Water").GetComponent<TilemapCollider2D>().enabled = false;
@@ -29,8 +33,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Run();
         FlipSprite();
-        
 
+        isGrounded = Physics2D.OverlapCapsule(groundCheck.position, new Vector2(0.5f, 0.15f), CapsuleDirection2D.Horizontal, 0, groundLayer);
 
     }
 
@@ -41,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed && isGrounded)
         {
             myRigidbody.velocity += new Vector2(0f, jumpSpeed);
             myAnimator.SetBool("isSailing", false);
